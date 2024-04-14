@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>GREEN-API Demo Interface</title>
+    <style>
+        /* Стилизация здесь */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #response {
+            width: 100%;
+            height: 150px;
+        }
+        input, button, textarea {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>GREEN-API Интерфейс</h1>
+    <label for="idInstance">ID инстанса:</label>
+    <input type="text" id="idInstance" placeholder="Введите ID инстанса"><br>
+    <label for="apiTokenInstance">API Token инстанса:</label>
+    <input type="text" id="apiTokenInstance" placeholder="Введите API Token"><br>
+    <button onclick="getSettings()">getSettings</button>
+    <button onclick="getStateInstance()">getStateInstance</button><br>
+    <input type="text" id="chatId" placeholder="77771234567">
+    <input type="text" id="message" placeholder="Hello World!">
+    <button onclick="sendMessage()">sendMessage</button><br>
+    <input type="text" id="fileUrl" placeholder="https://my.site.com/img/horse.png">
+    <button onclick="sendFileByUrl()">sendFileByUrl</button><br>
+    <textarea id="response" readonly></textarea><br>
+    <footer>
+        GREEN API © 2024
+    </footer>
+    <script src="green_api.js"></script>
+</body>
+</html>
