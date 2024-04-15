@@ -3,72 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>GREEN-API Demo Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .input-field, .response-area {
+            margin-bottom: 10px;
+        }
+        label, button, textarea {
+            display: block;
+            margin: 5px 0px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+        }
+        #response {
+            height: 200px;
+        }
+    </style>
 </head>
 <body>
     <h2>GREEN-API Демонстрационная страница</h2>
-    <div>
-        <label for="idInstance">Instance ID:</label>
-        <input type="text" id="idInstance" placeholder="Введите Instance ID">
-        <label for="apiToken">API Token:</label>
-        <input type="text" id="apiToken" placeholder="Введите API Token">
+    <div class="input-field">
+        <label for="idInstance">idInstance:</label>
+        <input type="text" id="idInstance">
     </div>
-    <div>
-        <button onclick="getSettings()">getSettings</button>
-        <button onclick="getStateInstance()">getStateInstance</button>
+    <div class="input-field">
+        <label for="apiToken">ApiTokenInstance:</label>
+        <input type="text" id="apiToken">
+    </div>
+    <button onclick="getSettings()">getSettings</button>
+    <button onclick="getStateInstance()">getStateInstance</button>
+    <div class="input-field">
+        <input type="text" id="sendMessageText" placeholder="77771234567">
         <button onclick="sendMessage()">sendMessage</button>
+    </div>
+    <div class="input-field">
+        <input type="text" id="sendFileText" placeholder="https://my.site.com/img/horse.png">
         <button onclick="sendFileByUrl()">sendFileByUrl</button>
     </div>
-    <div>
-        <textarea id="response" style="width:100%;height:200px;" readonly></textarea>
+    <div class="response-area">
+        <textarea id="response" readonly></textarea>
     </div>
 
     <script>
-        async function callApi(method, body = {}) {
-            const instanceId = document.getElementById('idInstance').value;
-            const apiToken = document.getElementById('apiToken').value;
-            const responseArea = document.getElementById('response');
-            const url = `https://api.green-api.com/v3/${instanceId}/${method}/`;
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiToken}`
-                    },
-                    body: JSON.stringify(body)
-                });
-                const data = await response.json();
-                responseArea.value = JSON.stringify(data, null, 4);
-            } catch (error) {
-                responseArea.value = `Ошибка: ${error.message}`;
-            }
-        }
-
-        function getSettings() {
-            callApi('getSettings');
-        }
-
-        function getStateInstance() {
-            callApi('getStateInstance');
-        }
-
-        function sendMessage() {
-            const body = { 
-                message: "Пример сообщения",
-                chatId: "123456789@c.us" // Указать актуальный chatId
-            };
-            callApi('sendMessage', body);
-        }
-
-        function sendFileByUrl() {
-            const body = {
-                fileUrl: "https://example.com/path/to/your/file.jpg",
-                chatId: "123456789@c.us" // Указать актуальный chatId
-            };
-            callApi('sendFileByUrl', body);
-        }
+        // Ваши функции JavaScript для вызова API
     </script>
 </body>
 </html>
-
