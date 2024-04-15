@@ -6,49 +6,139 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
         }
-        .input-field, .response-area {
-            margin-bottom: 10px;
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        label, button, textarea {
-            display: block;
-            margin: 5px 0px;
+
+        .input-field, .button-container {
+            margin-bottom: 20px;
         }
-        textarea {
+
+        input[type="text"], textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 14px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             width: 100%;
-            height: 150px;
         }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
         #response {
+            width: 100%;
             height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #f8f8f8;
+            resize: none;
         }
     </style>
 </head>
 <body>
-    <h2>GREEN-API Демонстрационная страница</h2>
-    <div class="input-field">
-        <label for="idInstance">idInstance:</label>
-        <input type="text" id="idInstance">
-    </div>
-    <div class="input-field">
-        <label for="apiToken">ApiTokenInstance:</label>
-        <input type="text" id="apiToken">
-    </div>
-    <button onclick="getSettings()">getSettings</button>
-    <button onclick="getStateInstance()">getStateInstance</button>
-    <div class="input-field">
-        <input type="text" id="sendMessageText" placeholder="77771234567">
-        <button onclick="sendMessage()">sendMessage</button>
-    </div>
-    <div class="input-field">
-        <input type="text" id="sendFileText" placeholder="https://my.site.com/img/horse.png">
-        <button onclick="sendFileByUrl()">sendFileByUrl</button>
-    </div>
-    <div class="response-area">
+    <div class="container">
+        <h2>GREEN-API Демонстрационная страница</h2>
+        <div class="input-field">
+            <label for="idInstance">idInstance:</label>
+            <input type="text" id="idInstance">
+        </div>
+        <div class="input-field">
+            <label for="apiToken">ApiTokenInstance:</label>
+            <input type="text" id="apiToken">
+        </div>
+        <div class="button-container">
+            <button onclick="getSettings()">getSettings</button>
+            <button onclick="getStateInstance()">getStateInstance</button>
+            <div class="input-field">
+                <input type="text" id="sendMessageText" placeholder="77771234567">
+                <button onclick="sendMessage()">sendMessage</button>
+            </div>
+            <div class="input-field">
+                <input type="text" id="sendFileText" placeholder="https://my.site.com/img/horse.png">
+                <button onclick="sendFileByUrl()">sendFileByUrl</button>
+            </div>
+        </div>
         <textarea id="response" readonly></textarea>
     </div>
 
     <script>
-        // Ваши функции JavaScript для вызова API
+        async function callApi(method, body = {}) {
+            const instanceId = document.getElementById('idInstance').value;
+            const apiToken = document.getElementById('apiToken').value;
+            const responseArea = document.getElementById('response');
+            const url = `https://7103.api.greenapi.com/v3/${instanceId}/${method}/`;
+
+            responseArea.value = 'Ожидание ответа...';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiToken}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                responseArea.value = JSON.stringify(data, null, 4);
+            } catch (error) {
+                responseArea.value = `Ошибка: ${error.message}`;
+            }
+        }
+
+        function getSettings() {
+            callApi('getSettings');
+        }
+
+        function getStateInstance() {
+            callApi('getStateInstance');
+        }
+
+        function sendMessage() {
+            const messageText = document.getElementById('sendMessageText').value;
+            const body = {
+                message: messageText,
+                chatId: "123456789@c.us" // Замените на актуальный chatId
+            };
+            callApi('sendMessage', body);
+        }
+
+        function sendFileByUrl() {
+            const fileUrl = document.getElementById('sendFileText').value;
+            const body = {
+                fileUrl: fileUrl,
+                chatId: "123456789@c.us" // Замените на актуальный chatId
+            };
+            callApi('sendFileByUrl', body);
+        }
     </script>
 </body>
 </html>
+
